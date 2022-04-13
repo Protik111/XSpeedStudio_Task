@@ -19,6 +19,13 @@ const TableData = () => {
             })
     }, [])
 
+    useEffect(() => {
+        axios.get('http://localhost/api/reorder.php')
+            .then(result => {
+                console.log(result, 'reorder')
+            })
+    }, [])
+
     if (tableHeader.length <= 0) {
         return (
             <Box mt={20} sx={{ width: '100%' }}>
@@ -37,7 +44,7 @@ const TableData = () => {
     console.log('data', dataTable, tableHeader);
 
     return (
-        <div>
+        <div className="mt-5">
             <BootstrapTable
                 bootstrap4
                 keyField='id'
@@ -45,29 +52,6 @@ const TableData = () => {
                 data={dataTable}
                 filter={filterFactory()}
             ></BootstrapTable>
-            {/* <table className="table table-bordered">
-                <thead className="thead-light">
-                    {
-                        tableHeader.map(header => <tr key={Math.random()}>
-                            <th scope="col">{header.id.title}</th>
-                            <th scope="col">{header.name.title}</th>
-                            <th scope="col">{header.message.title}</th>
-                            <th scope="col">{header.created_at.title}</th>
-                        </tr>)
-                    }
-                </thead>
-                <tbody>
-                    {
-                        dataTable.map(order =>
-                            <tr key={order.id}>
-                                <th scope="row">{order.id}</th>
-                                <td>{order.name}</td>
-                                <td>{order.message}</td>
-                                <td>{order.created_at}</td>
-                            </tr>)
-                    }
-                </tbody>
-            </table> */}
         </div>
     );
 };
