@@ -19,12 +19,12 @@ const TableData = () => {
             })
     }, [])
 
-    useEffect(() => {
-        axios.get('http://localhost/api/reorder.php')
-            .then(result => {
-                console.log(result, 'reorder')
-            })
-    }, [])
+    // useEffect(() => {
+    //     axios.get('http://localhost/api/reorder.php')
+    //         .then(result => {
+    //             console.log(result, 'reorder')
+    //         })
+    // }, [])
 
     if (tableHeader.length <= 0) {
         return (
@@ -41,7 +41,7 @@ const TableData = () => {
         { dataField: 'created_at', text: !tableHeader.created_at.title ? '' : tableHeader.created_at.title, sort: tableHeader.created_at.sortable, filter: tableHeader.created_at.searchable === true ? textFilter() : false }
     ]
 
-    console.log('data', dataTable, tableHeader);
+    // console.log('data', dataTable, tableHeader);
 
     return (
         <div className="mt-5">

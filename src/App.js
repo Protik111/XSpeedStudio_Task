@@ -1,13 +1,17 @@
 import './App.css';
-import Navbar from './components/Navbar';
-import TableData from './components/TableData';
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
+import Home from './components/Home';
+import Create from './components/Create';
 
 function App() {
   return (
-    <div>
-      <Navbar></Navbar>
-      <TableData></TableData>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home></Home>}></Route>
+        <Route path="/create" element={<Create></Create>}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
