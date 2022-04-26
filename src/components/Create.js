@@ -2,30 +2,52 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box } from "@mui/system";
 import LinearProgress from '@mui/material/LinearProgress';
+import Navbar from './Navbar';
 
 const Create = () => {
     const [formData, setFormData] = useState({});
-    const [state, setState] = useState({});
 
     useEffect(() => {
         axios.get('http://localhost/api/get_form.php')
             .then(result => {
                 setFormData(result.data.data.fields[0])
-                Object.keys(formData).map((resp) => setState(state => ({ ...state, [resp.fieldName]: resp.value })));
-                return () => { };
             })
     }, [])
 
-    const handleChange = (e, field) => {
-        setState({
-            ...state,
-            [field]: e.target.value //edit
-        });
+    //if I want to add a value property in the object
+    // const transformObj = (obj) => {
+    //     return Object.keys(obj).reduce((acc, cur) => {
+    //         acc[cur] = {
+    //             ...obj[cur],
+    //             value: ''
+    //         }
+    //         return acc;
+    //     }, {})
+    // }
+
+    const mapObjectToArr = (obj) => {
+        return Object.keys(obj).map((key) => ({ name: key, ...obj[key] }))
+    }
+
+    const formValues = mapObjectToArr(formData);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: {
+                ...formData[e.target.name],
+                value: e.target.value
+            }
+        })
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(state);
+        const values = Object.keys(formData).reduce((acc, cur) => {
+            acc[cur] = formData[cur].value;
+            return acc;
+        }, {})
+        console.log(values);
     };
 
     if (formData.length <= 0) {
@@ -36,33 +58,33 @@ const Create = () => {
         )
     }
 
-    console.log('formData', formData, typeof(formData));
-
     return (
-        <div className="d-flex flex-column justify-content-center align-items-center mt-5">
-            <form onSubmit={handleSubmit}>
-                {Object.keys(formData).map((key, index) => (
-                    <div className="mb-3" key={index}>
-                        <label className="form-label text-capitalize">
-                            {formData[key].title}
-                            {console.log('label', formData[key])}
-                        </label>
-                        <input
-                            type={key.type}
-                            className="form-control"
-                            required
-                            onChange={(e) => {
-                                handleChange(e, key.fieldName);
-                            }}
-                            value={state[key.fieldName]}
-                        />
-                    </div>
-                ))}
-                <button type="submit" className="btn btn-primary">
-                    Submit
-                </button>
-            </form>
-        </div>
+        <>
+            <Navbar></Navbar>
+            <div className="d-flex flex-column justify-content-center align-items-center mt-5">
+                <form onSubmit={handleSubmit}>
+                    {formValues.map((item, index) => (
+                        <div className="mb-3" key={index}>
+                            <label className="form-label text-capitalize">
+                                {item.title}
+                            </label>
+                            <input
+                                type={item.type}
+                                className="form-control"
+                                name={item.name}
+                                default={!item.default ? '' : item.default}
+                                required={item.required}
+                                onChange={handleChange}
+                                value={item.value}
+                            />
+                        </div>
+                    ))}
+                    <button type="submit" className="btn btn-primary">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </>
     );
 };
 
